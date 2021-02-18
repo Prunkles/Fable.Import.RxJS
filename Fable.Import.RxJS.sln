@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fable.Import.RxJS", "src\Fable.Import.RxJS\Fable.Import.RxJS.fsproj", "{9F31BACE-0CEC-49B2-8B1E-AA7A9AC637B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1DB181D6-0B1D-44AD-9543-C1D30ED691E6}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fable.Import.RxJS.Playground", "tests\Fable.Import.RxJS.Playground\src\Fable.Import.RxJS.Playground\Fable.Import.RxJS.Playground.fsproj", "{CAB7E7A3-68C6-43C1-A77A-AC71AAAA34BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F31BACE-0CEC-49B2-8B1E-AA7A9AC637B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F31BACE-0CEC-49B2-8B1E-AA7A9AC637B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F31BACE-0CEC-49B2-8B1E-AA7A9AC637B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F31BACE-0CEC-49B2-8B1E-AA7A9AC637B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAB7E7A3-68C6-43C1-A77A-AC71AAAA34BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAB7E7A3-68C6-43C1-A77A-AC71AAAA34BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAB7E7A3-68C6-43C1-A77A-AC71AAAA34BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAB7E7A3-68C6-43C1-A77A-AC71AAAA34BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CAB7E7A3-68C6-43C1-A77A-AC71AAAA34BC} = {1DB181D6-0B1D-44AD-9543-C1D30ED691E6}
+	EndGlobalSection
+EndGlobal
