@@ -22,6 +22,11 @@ type SubscriptionLike =
     abstract closed: bool with get
 
 
+[<Interface>]
+type Subscribable<'T> =
+    abstract subscribe: Observer<'T> -> Unsubscribable
+
+
 [<Erase>]
 type TeardownLogic = Unsubscribable of Unsubscribable | Function of (obj -> obj) | Void of unit
 
@@ -31,8 +36,8 @@ type TeardownLogic = Unsubscribable of Unsubscribable | Function of (obj -> obj)
 type Subscription(?unsubscribe: unit -> unit) =
     
     interface SubscriptionLike with
-        member this.unsubscribe() = jsNative //this.unsubscribe()
-        member this.closed = jsNative //this.closed
+        member this.unsubscribe() = jsNative
+        member this.closed = jsNative
     
     abstract unsubscribe: unit -> unit
     default _.unsubscribe() = jsNative
@@ -45,11 +50,10 @@ type Subscription(?unsubscribe: unit -> unit) =
     
     abstract remove: subscription: Subscription -> unit
     default _.remove(_) = jsNative
-
-
-[<Interface>]
-type Subscribable<'T> =
-    abstract subscribe: Observer<'T> -> Unsubscribable
+    
+    // System
+    interface System.IDisposable with
+        member this.Dispose() = jsNative
 
 
 [<Class>]
@@ -57,9 +61,9 @@ type Subscribable<'T> =
 type Subscriber<'T> =
     inherit Subscription
     interface Observer<'T> with
-        member this.next(value) = jsNative //this.next(value)
-        member this.error(err) = jsNative //this.error(err)
-        member this.complete() = jsNative //this.complete()
+        member this.next(_) = jsNative
+        member this.error(_) = jsNative
+        member this.complete() = jsNative
     
     abstract next: value: 'T -> unit
     default _.next(_) = jsNative
@@ -69,6 +73,12 @@ type Subscriber<'T> =
     
     abstract complete: unit -> unit
     default _.complete() = jsNative
+    
+    // System
+    interface System.IObserver<'T> with
+        member this.OnNext(_) = jsNative
+        member this.OnError(_) = jsNative
+        member this.OnCompleted() = jsNative
 
 
 [<Interface>]
@@ -78,10 +88,10 @@ type Operator<'T, 'R> =
 
 [<Class>]
 [<Import("Observable", from="rxjs")>]
-type Observable<'T> =
+type Observable<'T>(?subscribe: (Subscriber<'T> -> TeardownLogic)) =
     
     interface Subscribable<'T> with
-        member this.subscribe(_) = jsNative //upcast this.subscribe(obv)
+        member this.subscribe(_) = jsNative
     
     abstract subscribe: Observer<'T> -> Subscription
     default _.subscribe(_) = jsNative
@@ -95,3 +105,6 @@ type Observable<'T> =
     abstract operator: Operator<obj, 'T> with get
     default _.operator = jsNative
     
+    // System
+    interface System.IObservable<'T> with
+        member this.Subscribe(_) = jsNative

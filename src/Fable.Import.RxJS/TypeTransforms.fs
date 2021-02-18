@@ -1,4 +1,4 @@
-module Fable.Import.RxJS.TypeTransforms
+module internal Fable.Import.RxJS.TypeTransforms
 
 open System
 
@@ -21,55 +21,44 @@ module Obv =
             member _.complete() = obv.OnCompleted()
         }
 
-module Disp =
+
+module Prototypes =
     
     open Fable.Core.JsInterop
     
-    let initPrototype (rxjs: obj) =
-//        rxjs?Subscription?prototype?Dispose <-
-//            fun () ->
-//                let this: JsTypes.Subscription = jsThis
-//                this.unsubscribe()
+    let private rxjs: obj = importAll "rxjs"
+    
+    let Subscription () : unit =
         emitJsStatement (rxjs) """
+            // console.debug("RxJS.Subscription.prototype")
             const $rxjs = $0;
             rxjs.Subscription.prototype.Dispose = function() {
                 this.unsubscribe();
             };
         """
-    
-    let js2sys (jsDisp: JsTypes.Subscription) : IDisposable =
-        !!jsDisp
-//    let sys2js (disp: IDisposable) : JsDisposable =
-//        { new JsDisposable with member _.unsubscribe() = disp.Dispose() }
 
-module Obs =
-    
-    open Fable.Core.JsInterop
-    
-    let initPrototype (rxjs: obj) =
-//        let subscribe (sysObv: IObserver<_>) : IDisposable =
-//            let this: JsTypes.Observable<_> = jsThis
-//            JS.console.log(this)
-//            let jsObv = Obv.sys2js sysObv
-//            let subscription = this.subscribe(jsObv)
-//            Disp.js2sys subscription
-//        rxjs?Observable?prototype?Subscribe <- subscribe
-        emitJsStatement (rxjs, Obv.sys2js, Disp.js2sys) """
+    let Observable () : unit =
+        emitJsStatement (rxjs, Obv.sys2js) """
+            // console.debug("RxJS.Observable.prototype")
             const $rxjs = $0;
             const $Obv_sys2js = $1;
-            const $Disp_js2sys = $2;
             $rxjs.Observable.prototype.Subscribe = function(sysObv) {
                 const jsObv = $Obv_sys2js(sysObv);
                 const subscription = this.subscribe(jsObv);
-                return $Disp_js2sys(subscription);
+                return subscription;
             };
         """
     
-    let js2sys (jsObs: JsTypes.Observable<'a>) : IObservable<'a> =
-        !!jsObs
-    
-//    let sys2js (obs: IObservable<'a>) : JsObservable<'a> =
-//        { new JsObservable<'a> with
-//            member _.subscribe(jsObv) =
-//                obs.Subscribe(Obv.js2sys jsObv) |> Disp.sys2js
-//        }
+    let Subscriber () : unit =
+        emitJsStatement (rxjs) """
+            const $rxjs = $0;
+            $rxjs.Subscriber.prototype.OnNext = function(value) {
+                this.next(value);
+            };
+            $rxjs.Subscriber.prototype.OnError = function(err) {
+                this.error(err);
+            };
+            $rxjs.Subscriber.prototype.OnCompleted = function() {
+                this.complete();
+            };
+        """
